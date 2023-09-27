@@ -15,7 +15,7 @@ module.exports = {
     */
    const pokemon = JSON.parse(fs.readFileSync('./pokemons.json', 'utf-8')).map((element) => {
     delete element.id
-    element.createdAt = element.updateAt = new Date()
+    element.createdAt = element.updatedAt = new Date()
     return element
    })
    return queryInterface.bulkInsert("Pokemons", pokemon)

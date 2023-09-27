@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     height: DataTypes.INTEGER,
     hp: DataTypes.INTEGER,
     attack: DataTypes.INTEGER,
-    defence: DataTypes.INTEGER
+    defense: DataTypes.INTEGER,
+    speed: DataTypes.INTEGER,
+    skill: DataTypes.VARCHAR,
+    isSelected: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Pokemon',

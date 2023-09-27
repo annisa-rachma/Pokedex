@@ -15,6 +15,9 @@ module.exports = {
       type: {
         type: Sequelize.STRING
       },
+      imageUrl: {
+        type: Sequelize.STRING
+      },
       weight: {
         type: Sequelize.INTEGER
       },
@@ -28,6 +31,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       defense: {
+        type: Sequelize.INTEGER
+      },
+      speed: {
         type: Sequelize.INTEGER
       },
       createdAt: {
