@@ -15,8 +15,8 @@ router.post('/addUser', (req, res) => {res.redirect('/homepage')})
 router.get('/homepage', Controller.home)
 
 //add pokemon ke pokedex(tombol ada di home dan detail pokemon)
-router.get('/addPokemon', Controller.addPokemon)
-router.get('/deletePokemon', Controller.deletePokemon)
+router.get('/addPokemon', Controller.addPokemonToPokedex)
+router.get('/deletePokemon', Controller.deletePokemonFromPokedex)
 
 //di home ketika klik pokemon, akan menampilkan detail
 router.get('/detail/:id', Controller.detailPokemon)

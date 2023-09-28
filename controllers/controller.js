@@ -11,7 +11,7 @@ class Controller {
         }
         })
         .then((pokemonData) => {
-            // console.log(pokemonData)
+            console.log(pokemonData)
             res.render('home', {pokemonData})
         })
         .catch((err) => {
@@ -25,7 +25,6 @@ class Controller {
 
     }
 
-    //di sini ngeupdate isSelected by idUser
     static deletePokemonFromPokedex(req, res) {
 
     }
