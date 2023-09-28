@@ -7,6 +7,10 @@ const Controller = require('../controllers/controller')
 router.get('/', (req, res) => {res.render('login-page')})
 router.post('/', (req, res) => {res.redirect('/homepage')})
 
+//register page
+router.get('/addUser', (req, res) => {res.render('signUp-page')})
+router.post('/addUser', (req, res) => {res.redirect('/homepage')})
+
 //tampilin home
 router.get('/homepage', Controller.home)
 
@@ -14,17 +18,12 @@ router.get('/homepage', Controller.home)
 router.get('/addPokemon', Controller.addPokemon)
 router.get('/deletePokemon', Controller.deletePokemon)
 
-
 //di home ketika klik pokemon, akan menampilkan detail
 router.get('/detail/:id', Controller.detailPokemon)
 
 //render pokedex, dan update ketika ada pokemon yang dihapus dari pokedex
 router.get('/pokedex', (req, res) => {res.render('pokedex')})
 router.post('/pokedex', (req, res) => {res.redirect('/pokedex')})
-
-//register page
-router.get('/addUser', (req, res) => {res.render('signUp-page')})
-router.post('/addUser', (req, res) => {res.redirect('/homepage')})
 
 //edit user
 router.get('/editUser', (req, res) => {res.render('editUser')})
