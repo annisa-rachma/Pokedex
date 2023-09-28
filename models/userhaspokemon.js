@@ -11,11 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      UserHasPokemon.belongsTo(models.Pokemon)
+      UserHasPokemon.belongsTo(models.UserDetail)
     }
   }
   UserHasPokemon.init({
     PokemonId: DataTypes.INTEGER,
-    UserId: DataTypes.INTEGER
+    UserDetailId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'UserHasPokemon',

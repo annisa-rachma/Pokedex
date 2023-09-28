@@ -11,14 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      UserDetail.belongsToMany(models.Pokemon, {through: 'UserHasPokemon', foreignKey: 'UserId'})
+      UserDetail.belongsTo(models.User)
+      // UserDetail.belongsToMany(models.Pokemon, {through: 'UserHasPokemon'})
+      UserDetail.hasMany(models.UserHasPokemon, {foreignKey : 'UserDetailId'})
+
     }
   }
   UserDetail.init({
     UserId: DataTypes.STRING,
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
-    profileImage: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'UserDetail',

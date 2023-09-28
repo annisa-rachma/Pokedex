@@ -2,17 +2,17 @@ const express = require('express')
 const router = express.Router()
 const Controller = require('../controllers/controller')
 
+/******************************** SIGN UP *************************************/
+router.get('/addUser', Controller.registerForm)
+router.post('/addUser', Controller.postRegister)
 
-//tampilin log in page, masukin data dari log in page
-router.get('/', (req, res) => {res.render('login-page')})
-router.post('/', (req, res) => {res.redirect('/homepage')})
+/******************************** LOG IN *************************************/
+router.get('/', Controller.logInForm)
+router.post('/', Controller.postForm)
 
-//register page
-router.get('/addUser', (req, res) => {res.render('signUp-page')})
-router.post('/addUser', (req, res) => {res.redirect('/homepage')})
 
 //tampilin home
-router.get('/homepage', Controller.home)
+router.get('/homepage/:userId', Controller.home)
 
 //add pokemon ke pokedex(tombol ada di home dan detail pokemon)
 router.get('/addPokemon', Controller.addPokemonToPokedex)
