@@ -1,22 +1,15 @@
-const Model = require('../models/model')
+// const Model = require('../models/model')
 // const { renderChart } = require('../helpers/charts')
+const {Pokemon, User, UserDetail, UserHasPokemon} = require('../models')
 const chartModel = require('../helpers/charts');
-const chartData = {
-    labels: ['Attack', 'Defense', 'Speed', 'Special Attack', 'Special Defense'],
-    datasets: [
-      {
-        label: 'Pokemon Stats',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-        data: [65, 70, 45, 80, 80], // Replace with your actual data
-      },
-    ],
-  };
 
 class Controller {
     static home(req, res) {
-        Model.listPokemon()
+        Pokemon.findAll({
+          where : {
+            isSelected: false
+        }
+        })
         .then((pokemonData) => {
             // console.log(pokemonData)
             res.render('home', {pokemonData})
@@ -27,10 +20,14 @@ class Controller {
         })
     }
 
-    static addPokemon(req, res) {
+    //di sini ngeupdate isSelected by idUser
+    static addPokemonToPokedex(req, res) {
+
     }
 
-    static deletePokemon(req, res) {
+    //di sini ngeupdate isSelected by idUser
+    static deletePokemonFromPokedex(req, res) {
+
     }
 
     static detailPokemon(req, res) {
