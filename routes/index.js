@@ -2,6 +2,17 @@ const express = require('express')
 const router = express.Router()
 const Controller = require('../controllers/controller')
 
+
+const isAdmin = function (req, res, next){
+    if(req.session.idUser && req.session.role !== "admin"){
+        const error = 'Access Denied'
+        res.redirect(`/?errors=${error}`)
+    } else{
+        next()
+    }
+}
+
+
 /******************************** SIGN UP *************************************/
 router.get('/addUser', Controller.registerForm)
 router.post('/addUser', Controller.postRegister)
@@ -27,6 +38,13 @@ router.use((req, res, next) => {
 /******************************** HOME *************************************/
 router.get('/homepage/:userId', Controller.home)
 
+
+
+/******************************** ADD NEW POKEMON *************************************/
+router.get('/homepage/:userId/addNewPokeon',isAdmin, Controller.addNewPokemon)
+router.post('/homepage/:userId/addNewPokeon',isAdmin, Controller.addNewPokemonPost)
+
+
 /******************************** ADD POKEMON *************************************/
 router.get('/homepage/:userId/addPokemon/:pokemonId', Controller.addPokemonToPokedex)
 
@@ -41,9 +59,11 @@ router.get('/pokedex/:userId', Controller.showPokedex)
 router.get('/homepage/:userId/delete/:pokemonId', Controller.deletePokemonFromPokedex)
 
 
-//edit user
+/******************************** EDIT USER *************************************/
 router.get('/homepage/:userId/editUser', Controller.editUserFrom)
 router.post('/homepage/:userId/editUser', Controller.postEditUserForm)
+
+
 
 
 

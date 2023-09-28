@@ -58,6 +58,7 @@ class Controller {
 
             if(isValidPassword) {
               req.session.idUser = result.dataValues.id
+              req.session.role = result.dataValues.role
 
               return res.redirect(`/homepage/${id}`)
             } else {
@@ -83,40 +84,75 @@ class Controller {
     }
 
 
-
     /******************************** HOMEPAGE *************************************/
 
     static home(req, res) {
         const {userId} = req.params
-
+        const {search} = req.query
         let pokemonData
-        Pokemon.findAll({
-          include : {
-            model : UserHasPokemon,
-            where : {
-              UserDetailId : {
-                [Op.ne] : userId
-              }
-            }
-          }
-        })
-        .then((result) => {
-            pokemonData = result
+        // Pokemon.findAll({
+        //   include : {
+        //     model : UserHasPokemon,
+        //     where : {
+        //       UserDetailId : {
+        //         [Op.ne] : userId
+        //       }
+        //     }
+        //   }
+        // })
+        // .then((result) => {
+        //     pokemonData = result
 
-            return Pokemon.findAll({
-              include : {
-                model : UserHasPokemon
-              }, where: {
-                '$UserHasPokemons.id$': {
-                  [Op.is]: null, 
-                },
+        //     return Pokemon.findAll({
+        //       include : {
+        //         model : UserHasPokemon
+        //       }, where: {
+        //         '$UserHasPokemons.id$': {
+        //           [Op.is]: null, 
+        //         },
+        //       },
+        //     })
+        // })
+        // .then((result) => {
+        //   result.forEach(element => {
+        //     pokemonData.push(element)
+        //   });
+        //   // res.send(pokemonData)
+        //   res.render('home', {pokemonData, userId})
+        // })
+        // .catch((err) => {
+        //     console.log(err)
+        //     res.send(err)
+        // })
+
+      //yang bisa
+        
+
+      let option = {
+        include : {
+          model : UserHasPokemon
+        }, where: {
+          '$UserHasPokemons.id$': {
+            [Op.is]: null, 
+          },
+        },
+      }
+
+      if(search) {
+        option.where = {
+          [Op.and]: [
+            option.where,
+            {
+              name: {
+                [Op.iLike]: `%${search}%`, // Use Op.like to perform a case-insensitive search
               },
-            })
-        })
+            },
+          ],
+        };
+      }
+      Pokemon.findAll(option)
         .then((result) => {
-          result.forEach(element => {
-            pokemonData.push(element)
-          });
+          pokemonData = result
           // res.send(pokemonData)
           res.render('home', {pokemonData, userId})
         })
@@ -124,25 +160,6 @@ class Controller {
             console.log(err)
             res.send(err)
         })
-
-        // Pokemon.findAll({
-        //   include: {
-        //     model: UserHasPokemon,
-        //     where: {
-        //       UserDetailId : userId
-        //     }
-        //   } 
-        // })
-        // .then((result) => {
-
-        //   res.send(result)
-        //   // res.render('home', {pokemonData, userId})
-        // })
-        // .catch((err) => {
-        //     console.log(err)
-        //     res.send(err)
-        // })
-       
     }
 
     /******************************** ADD POKEMON *************************************/
@@ -241,7 +258,7 @@ class Controller {
   }
 
   static postEditUserForm(req, res) {
-      console.log(req.body);
+      // console.log(req.body);
       const { firstName, lastName, email } = req.body;
       const { userId } = req.params;
       UserDetail.update(
@@ -267,6 +284,30 @@ class Controller {
               res.send(err);
           });
   }
+
+
+    /******************************** ADD NEW POKEMON *************************************/
+    static addNewPokemon(req, res) {
+      const { userId } = req.params;
+      const {errors} = req.query
+
+      res.render('addNewPokemon', {errors, userId})
+    }
+
+    static addNewPokemonPost(req, res) {
+      const { userId } = req.params;
+
+      const {name, type, imageUrl, weight, height, hp, attack, defense, speed,skill} = req.body
+      let isSelected = false
+      Pokemon.create({name, type, imageUrl, weight, height, hp, attack, defense, speed,skill, isSelected})
+        .then((result) => {
+          res.redirect(`/homepage/${userId}`)
+        })
+        .catch((err) => {
+          console.log(err)
+          res.send(err)
+        })
+    }
 
 
     /******************************** LOGOUT *************************************/
