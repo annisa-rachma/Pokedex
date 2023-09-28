@@ -4,7 +4,7 @@ const {Pokemon, User, UserDetail, UserHasPokemon} = require('../models')
 // const chartModel = require('../helpers/charts');
 const bcrypt = require('bcryptjs')
 const userhaspokemon = require('../models/userhaspokemon')
-const { Op } = require("sequelize");
+const { Op, literal } = require('sequelize');
 
 
 class Controller {
@@ -97,6 +97,38 @@ class Controller {
             res.send(err)
         })
     }
+
+
+// ...
+
+    // static home(req, res) {
+    //   const { userId } = req.params;
+
+    //   Pokemon.findAll({
+    //     include: {
+    //       model: UserHasPokemon,
+    //       required: false, // Use a left outer join to include Pokémon even if there's no related entry
+    //       where: {
+    //         UserDetailId: {
+    //           [Op.ne]: literal(`"${userId}"`), // Filter out Pokémon with a matching UserDetailId
+    //         },
+    //       },
+    //     },
+    //     where: {
+    //       '$UserHasPokemons.id$': {
+    //         [Op.is]: null, // Check if there are no related entries in UserHasPokemons
+    //       },
+    //     },
+    //   })
+    //     .then((pokemonData) => {
+    //       res.render('home', { pokemonData, userId });
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //       res.send(err);
+    //     });
+    // }
+
 
     /******************************** ADD POKEMON *************************************/
     static addPokemonToPokedex(req, res) {
