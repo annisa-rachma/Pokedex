@@ -10,6 +10,15 @@ router.post('/addUser', Controller.postRegister)
 router.get('/', Controller.logInForm)
 router.post('/', Controller.postForm)
 
+/******************************** MIDDLEWARE *************************************/
+router.use((req, res, next) => {
+    console.log(req.session)
+
+    console.log('Time:', Date.now())
+    next()
+})
+
+
 
 /******************************** HOME *************************************/
 router.get('/homepage/:userId', Controller.home)
