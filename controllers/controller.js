@@ -11,8 +11,11 @@ class Controller {
 
     /******************************** SIGN UP *************************************/
     static registerForm(req, res) {
-      res.render('signUp-page')
+      const {errors} = req.query
+
+      res.render('signUp-page', {errors})
     }
+
     static postRegister(req, res) {
       const {firstName, lastName, email, password, role} = req.body
 
@@ -25,8 +28,15 @@ class Controller {
           res.redirect('/')
         })
         .catch((err) => {
-          console.log(err)
-          res.send(err)
+          if(err.name === "SequelizeValidationError") {
+            err = err.errors.map((el) => {
+                return el.message
+            })
+            res.redirect(`/addUser?errors=${err.join(', ')}`)
+          } else {
+              console.log(err)
+              res.send(err)
+          }
         })
     }
 
@@ -47,7 +57,7 @@ class Controller {
             const isValidPassword = bcrypt.compareSync(password, result.password);
 
             if(isValidPassword) {
-              req.session.idUser = result.id
+              req.session.idUser = result.dataValues.id
 
               return res.redirect(`/homepage/${id}`)
             } else {
@@ -79,58 +89,61 @@ class Controller {
     static home(req, res) {
         const {userId} = req.params
 
-        let dataPokemon
+        let pokemonData
         Pokemon.findAll({
           include : {
-            model : UserHasPokemon
-          }, where: {
-            '$UserHasPokemons.id$': {
-              [Op.is]: null, // Check if there are no related entries in UserHasPokemons
-            },
-          },
+            model : UserHasPokemon,
+            where : {
+              UserDetailId : {
+                [Op.ne] : userId
+              }
+            }
+          }
         })
-        .then((pokemonData) => {
-            // dataPokemon = 
-            // res.send(pokemonData)
-            res.render('home', {pokemonData, userId})
+        .then((result) => {
+            pokemonData = result
+
+            return Pokemon.findAll({
+              include : {
+                model : UserHasPokemon
+              }, where: {
+                '$UserHasPokemons.id$': {
+                  [Op.is]: null, 
+                },
+              },
+            })
+        })
+        .then((result) => {
+          result.forEach(element => {
+            pokemonData.push(element)
+          });
+          // res.send(pokemonData)
+          res.render('home', {pokemonData, userId})
         })
         .catch((err) => {
             console.log(err)
             res.send(err)
         })
+
+        // Pokemon.findAll({
+        //   include: {
+        //     model: UserHasPokemon,
+        //     where: {
+        //       UserDetailId : userId
+        //     }
+        //   } 
+        // })
+        // .then((result) => {
+
+        //   res.send(result)
+        //   // res.render('home', {pokemonData, userId})
+        // })
+        // .catch((err) => {
+        //     console.log(err)
+        //     res.send(err)
+        // })
+       
     }
-
-
-// ...
-
-    // static home(req, res) {
-    //   const { userId } = req.params;
-
-    //   Pokemon.findAll({
-    //     include: {
-    //       model: UserHasPokemon,
-    //       required: false, // Use a left outer join to include Pokémon even if there's no related entry
-    //       where: {
-    //         UserDetailId: {
-    //           [Op.ne]: literal(`"${userId}"`), // Filter out Pokémon with a matching UserDetailId
-    //         },
-    //       },
-    //     },
-    //     where: {
-    //       '$UserHasPokemons.id$': {
-    //         [Op.is]: null, // Check if there are no related entries in UserHasPokemons
-    //       },
-    //     },
-    //   })
-    //     .then((pokemonData) => {
-    //       res.render('home', { pokemonData, userId });
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //       res.send(err);
-    //     });
-    // }
-
 
     /******************************** ADD POKEMON *************************************/
     static addPokemonToPokedex(req, res) {
@@ -146,7 +159,7 @@ class Controller {
     })
     }
 
-    /******************************** ADD POKEMON *************************************/
+    /******************************** DETAIL POKEMON *************************************/
     static detailPokemon(req, res) {
       const {userId, pokemonId} = req.params
 
@@ -161,17 +174,113 @@ class Controller {
       })
     }
 
-    static deletePokemonFromPokedex(req, res) {
-
+    /******************************** POKEDEX *************************************/
+    static showPokedex(req, res){
+      const {userId, pokemonId} = req.params
+      UserDetail.findAll({
+        include: {
+          model: UserHasPokemon,
+          where: {
+            UserDetailId : userId
+          },
+          include: {
+            model : Pokemon
+          }
+        } 
+      
+      })
+      .then((result) => {
+        result = result[0]
+        // res.send(result)
+        // console.log(result,'<<<<<<<<<');
+        res.render('pokedex', {result, userId, pokemonId})
+      })
+      .catch((err) => {
+        console.log(err);
+        res.send(err);
+      });
     }
 
- 
+    
+    /******************************** DELETE POKEMON FROM POKEDEX *************************************/
+    static deletePokemonFromPokedex(req, res) {
+      const { userId, pokemonId } = req.params;
+
+      UserHasPokemon.destroy({
+        where : {
+          UserDetailId : userId,
+          PokemonId : pokemonId
+        }
+      })
+      .then((result) => {
+        res.redirect(`/pokedex/${userId}`)
+      })
+      .catch((err) => {
+        console.log(err);
+        res.send(err);
+      });
+  
+    }
+
+    /******************************** EDIT USER *************************************/
+    static editUserFrom(req, res) {
+      // res.send('hello')
+      const {userId} = req.params
+      UserDetail.findByPk(userId, {
+        include : User
+      })
+      .then((result) => {
+        // res.send(result)
+          res.render("editUser", {result, userId});
+      })
+      .catch((err) => {
+          console.log(err);
+          res.send(err);
+      });
+
+  }
+
+  static postEditUserForm(req, res) {
+      console.log(req.body);
+      const { firstName, lastName, email } = req.body;
+      const { userId } = req.params;
+      UserDetail.update(
+          { firstName, lastName },
+          {
+              where: {
+                  id: +userId,
+              },
+          })
+          .then((result) => {
+              // console.log(result);
+              return User.update({email}, {
+                where: {
+                    id: +userId,
+                },
+            })
+
+          })
+          .then(() => {
+            res.redirect(`/homepage/${userId}`);
+          })
+          .catch((err) => {
+              res.send(err);
+          });
+  }
 
 
-    // static detailPokemon(req, res) {
-    // const data = chartModel.getChartData();
-    // res.render('detailPokemon', { data });
-    // };
+    /******************************** LOGOUT *************************************/
+
+    static logout(req, res) {
+      req.session.destroy((err) => {
+        if(err) {
+          console.log(err)
+          res.send(err)
+        } else {
+          res.redirect('/')
+        }
+      })
+    }
 
 }
 

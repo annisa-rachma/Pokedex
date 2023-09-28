@@ -10,15 +10,19 @@ router.post('/addUser', Controller.postRegister)
 router.get('/', Controller.logInForm)
 router.post('/', Controller.postForm)
 
+/******************************** LOG OUT *************************************/
+router.get('/logOut', Controller.logout)
+
 /******************************** MIDDLEWARE *************************************/
 router.use((req, res, next) => {
-    console.log(req.session)
+    if(!req.session.idUser){
+        let errors = 'Please login first!'
 
-    console.log('Time:', Date.now())
-    next()
+        res.redirect(`/?errors=${errors}`)
+    } else {
+        next()
+    }
 })
-
-
 
 /******************************** HOME *************************************/
 router.get('/homepage/:userId', Controller.home)
@@ -29,21 +33,19 @@ router.get('/homepage/:userId/addPokemon/:pokemonId', Controller.addPokemonToPok
 /******************************** DETAIL POKEMON *************************************/
 router.get('/homepage/:userId/detail/:pokemonId', Controller.detailPokemon)
 
+/******************************** POKEDEX *************************************/
+router.get('/pokedex/:userId', Controller.showPokedex)
+// router.post('/pokedex/:userId', (req, res) => {res.redirect('/pokedex')})
+
 /******************************** DELETE POKEMON *************************************/
-router.get('/deletePokemon', Controller.deletePokemonFromPokedex)
+router.get('/homepage/:userId/delete/:pokemonId', Controller.deletePokemonFromPokedex)
 
-
-
-//render pokedex, dan update ketika ada pokemon yang dihapus dari pokedex
-router.get('/pokedex', (req, res) => {res.render('pokedex')})
-router.post('/pokedex', (req, res) => {res.redirect('/pokedex')})
 
 //edit user
-router.get('/editUser', (req, res) => {res.render('editUser')})
-router.post('/editUser', (req, res) => {res.redirect('/pokedex')})
+router.get('/homepage/:userId/editUser', Controller.editUserFrom)
+router.post('/homepage/:userId/editUser', Controller.postEditUserForm)
 
-//log out
-router.get('/logOut', (req, res) => {res.redirect('/')})
+
 
 
 
