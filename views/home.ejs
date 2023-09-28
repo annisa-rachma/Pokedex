@@ -1,0 +1,62 @@
+<%- include('header') %>
+
+
+<form class="w-3/4 mt-12 mb-8">   
+    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+        </div>
+        <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Pokemons..." required>
+        <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+    </div>
+</form>
+
+
+
+<div class="container mx-auto flex flex-wrap justify-center" >
+
+        <% pokemonData.forEach((el) => { %>
+        <a href="/detail/:id">
+        <div class="max-w-sm w-68 m-6 p-2 bg-white rounded-lg shadow-xl drop-shadow-2xl">
+            <div class="flex justify-center mt-4">
+                <img class="rounded-t-lg w-40" src="<%= el.data.sprites.other["official-artwork"].front_default%>" alt="" />
+            </div>
+            <div class="flex flex-col justify-center mt-4">
+                <div class="rounded-full bg-green-300 w-36 h-2 m-auto justify-center"></div>
+                <p class="text-sky-500 text-center text-sm mt-2">HP <%= el.data.stats[0].base_stat %>/<%= el.data.stats[0].base_stat %> </p>
+            </div>
+            <div class="w-64 h-32 mt-4">
+                <% let name = el.name %>
+                <% name = name.charAt(0).toUpperCase() + name.slice(1) %>
+                <div class="font-bold text-xl mb-2 text-center text-sky-500"><%= name %></div>
+                <div class="flex flex-row justify-center space-x-6 divide-x divide-sky-300 mt-4">
+                    <div >
+                        <% let type = el.data.types[0].type.name %>
+                        <% type = type.charAt(0).toUpperCase() + type.slice(1) %>
+                        <p class="text-sky-500 text-center text-xl"><%= type %></p>
+                        <p class="text-sky-400 text-center text-sm">Type</p>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sky-500 text-center text-xl ml-4"><%= el.data.weight %></p>
+                        <p class="text-sky-400 text-center text-sm ml-4">Weight</p>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sky-500 text-center text-xl ml-4"><%= el.data.height %></p>
+                        <p class="text-sky-400 text-center text-sm ml-4">Height</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center -mt-3 mb-5">
+                <a href="/addPokemon">
+                    <button type="submit" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-md px-5 py-2.5 text-center mb-2">Add to Pokedex</button>
+                </a>
+            </div>
+        </div>
+        </a>
+    <% }) %>
+</div>
+<%- include('footer') %>
+
