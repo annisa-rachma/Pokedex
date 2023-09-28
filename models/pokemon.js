@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // Pokemon.belongsToMany(models.UserDetail, {through: 'UserHasPokemon'})
       Pokemon.hasMany(models.UserHasPokemon, {foreignKey : 'PokemonId'})
     }
+    
   }
   Pokemon.init({
     name: DataTypes.STRING,

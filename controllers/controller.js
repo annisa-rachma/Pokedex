@@ -4,6 +4,8 @@ const {Pokemon, User, UserDetail, UserHasPokemon} = require('../models')
 // const chartModel = require('../helpers/charts');
 const bcrypt = require('bcryptjs')
 const userhaspokemon = require('../models/userhaspokemon')
+const { Op } = require("sequelize");
+
 
 class Controller {
 
@@ -75,14 +77,20 @@ class Controller {
     static home(req, res) {
         const {userId} = req.params
 
+        let dataPokemon
         Pokemon.findAll({
           include : {
             model : UserHasPokemon
-          }
+          }, where: {
+            '$UserHasPokemons.id$': {
+              [Op.is]: null, // Check if there are no related entries in UserHasPokemons
+            },
+          },
         })
         .then((pokemonData) => {
-            res.send(pokemonData)
-            // res.render('home', {pokemonData})
+            // dataPokemon = 
+            // res.send(pokemonData)
+            res.render('home', {pokemonData, userId})
         })
         .catch((err) => {
             console.log(err)
@@ -90,18 +98,40 @@ class Controller {
         })
     }
 
-    //di sini ngeupdate isSelected by idUser
+    /******************************** ADD POKEMON *************************************/
     static addPokemonToPokedex(req, res) {
+      const {userId, pokemonId} = req.params
 
+      UserHasPokemon.create({PokemonId : pokemonId, UserDetailId : userId})
+      .then((result) => {
+        res.redirect(`/homepage/${userId}`)
+      })
+      .catch((err) => {
+        console.log(err)
+        res.send(err)
+    })
+    }
+
+    /******************************** ADD POKEMON *************************************/
+    static detailPokemon(req, res) {
+      const {userId, pokemonId} = req.params
+
+      Pokemon.findByPk(+pokemonId)
+      .then((result) => {
+        // res.send(result)
+        res.render('detailPokemon', {result, userId, pokemonId})
+      })
+      .catch((err) => {
+        console.log(err)
+        res.send(err)
+      })
     }
 
     static deletePokemonFromPokedex(req, res) {
 
     }
 
-    static detailPokemon(req, res) {
-        res.render('detailPokemon', {chartData})
-    }
+ 
 
 
     // static detailPokemon(req, res) {

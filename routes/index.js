@@ -11,15 +11,19 @@ router.get('/', Controller.logInForm)
 router.post('/', Controller.postForm)
 
 
-//tampilin home
+/******************************** HOME *************************************/
 router.get('/homepage/:userId', Controller.home)
 
-//add pokemon ke pokedex(tombol ada di home dan detail pokemon)
-router.get('/addPokemon', Controller.addPokemonToPokedex)
+/******************************** ADD POKEMON *************************************/
+router.get('/homepage/:userId/addPokemon/:pokemonId', Controller.addPokemonToPokedex)
+
+/******************************** DETAIL POKEMON *************************************/
+router.get('/homepage/:userId/detail/:pokemonId', Controller.detailPokemon)
+
+/******************************** DELETE POKEMON *************************************/
 router.get('/deletePokemon', Controller.deletePokemonFromPokedex)
 
-//di home ketika klik pokemon, akan menampilkan detail
-router.get('/detail/:id', Controller.detailPokemon)
+
 
 //render pokedex, dan update ketika ada pokemon yang dihapus dari pokedex
 router.get('/pokedex', (req, res) => {res.render('pokedex')})
