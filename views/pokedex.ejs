@@ -36,58 +36,65 @@
         </div>
       </nav>
 
-<div class="flex flex-col mt-12">
+<div class="flex flex-col mt-12 mb-12">
     <h1 class="block w-full text-5xl text-center text-white font-bold mb-4 mt-2">Your Pokedex</h1>
 
-    <div class="flex flex-row justify-center mt-12">
-        <div class="mr-64">
-            <img class="w-48 h-48 rounded-full" src="https://qph.cf2.quoracdn.net/main-qimg-f8db2991c8c3117fb8f8da0bd1e46d3d-lq" alt="user photo">
-        </div>
-        <div >
-            <% let fullName = result.firstName + ' ' + result.lastName %>
-            <p class="text-5xl text-left font-bold text-white mb-4 mt-16 -ml-48"><%= fullName  %></p>
-        </div>
-    </div>
+    <% if(!result) { %>
+        <h1 class="block w-full text-4xl text-center text-white font-bold mb-4 mt-32">You have no pokemons in your pokedex</h1>
 
+    <% } else { %>
 
-<div class="container mx-auto flex flex-wrap justify-center mt-8" >
-    <% let pokemons = result.UserHasPokemons %>
-
-    <% pokemons.forEach((el) => { %>
-        <div class="max-w-sm w-68 m-6 p-2 bg-white rounded-lg shadow-xl drop-shadow-2xl">
-            <div class="flex justify-center mt-4">
-                <img class="rounded-t-lg w-40" src="<%= el.Pokemon.imageUrl %>" alt="" />
+        <div class="flex flex-row justify-center mt-12">
+            <div class="mr-64">
+                <img class="w-48 h-48 rounded-full" src="https://qph.cf2.quoracdn.net/main-qimg-f8db2991c8c3117fb8f8da0bd1e46d3d-lq" alt="user photo">
             </div>
-            <div class="flex flex-col justify-center mt-4">
-                <div class="rounded-full bg-green-300 w-36 h-2 m-auto justify-center"></div>
-                <p class="text-sky-500 text-center text-sm mt-2">HP <%= el.Pokemon.hp %>/<%= el.Pokemon.hp %> </p>
+            <div >
+                <% let fullName = result.firstName + ' ' + result.lastName %>
+                <p class="text-5xl text-left font-bold text-white mb-4 mt-16 -ml-48"><%= fullName  %></p>
             </div>
-            <div class="w-64 h-32 mt-4">
-                <div class="font-bold text-xl mb-2 text-center text-sky-500"><%= el.Pokemon.name %></div>
-                <div class="flex flex-row justify-center space-x-6 divide-x divide-sky-300 mt-4">
-                    <div >
-                        <p class="text-sky-500 text-center text-xl"><%= el.Pokemon.type %></p>
-                        <p class="text-sky-400 text-center text-sm">Type</p>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sky-500 text-center text-xl ml-4"><%= el.Pokemon.weight %></p>
-                        <p class="text-sky-400 text-center text-sm ml-4">Weight</p>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sky-500 text-center text-xl ml-4"><%= el.Pokemon.height %></p>
-                        <p class="text-sky-400 text-center text-sm ml-4">Height</p>
+        </div>
+    
+    <% if(result.UserHasPokemons.length != 0) { %>
+    <div class="container mx-auto flex flex-wrap justify-center mt-8" >
+        <% let pokemons = result.UserHasPokemons %>
+    
+        <% pokemons.forEach((el) => { %>
+            <div class="max-w-sm w-68 m-6 p-2 bg-white rounded-lg shadow-xl drop-shadow-2xl">
+                <div class="flex justify-center mt-4">
+                    <img class="rounded-t-lg w-40" src="<%= el.Pokemon.imageUrl %>" alt="" />
+                </div>
+                <div class="flex flex-col justify-center mt-4">
+                    <div class="rounded-full bg-green-300 w-36 h-2 m-auto justify-center"></div>
+                    <p class="text-sky-500 text-center text-sm mt-2">HP <%= el.Pokemon.hp %>/<%= el.Pokemon.hp %> </p>
+                </div>
+                <div class="w-64 h-32 mt-4">
+                    <div class="font-bold text-xl mb-2 text-center text-sky-500"><%= el.Pokemon.name %></div>
+                    <div class="flex flex-row justify-center space-x-6 divide-x divide-sky-300 mt-4">
+                        <div >
+                            <p class="text-sky-500 text-center text-xl"><%= el.Pokemon.type %></p>
+                            <p class="text-sky-400 text-center text-sm">Type</p>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sky-500 text-center text-xl ml-4"><%= el.Pokemon.weight %></p>
+                            <p class="text-sky-400 text-center text-sm ml-4">Weight</p>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sky-500 text-center text-xl ml-4"><%= el.Pokemon.height %></p>
+                            <p class="text-sky-400 text-center text-sm ml-4">Height</p>
+                        </div>
                     </div>
                 </div>
+                <div class="flex justify-center -mt-3 mb-5">
+                    <a href="/homepage/<%= userId %>/delete/<%= el.Pokemon.id %>">
+                        <button type="submit" class="text-white bg-gradient-to-r from-red-500 to-red-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:red-cyan-800 font-medium rounded-lg text-md px-5 py-2.5 text-center mb-2">Delete from your pokedex</button>
+                    </a>
+                </div>
             </div>
-            <div class="flex justify-center -mt-3 mb-5">
-                <a href="/homepage/<%= userId %>/delete/<%= el.Pokemon.id %>">
-                    <button type="submit" class="text-white bg-gradient-to-r from-red-500 to-red-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:red-cyan-800 font-medium rounded-lg text-md px-5 py-2.5 text-center mb-2">Delete from your pokedex</button>
-                </a>
-            </div>
-        </div>
-        <!-- </a> -->
-    <% }) %>
-</div>
+            <!-- </a> -->
+        <% }) %>
+    </div>
+    <% } %>
+    <%} %>
 
 </div>
 
