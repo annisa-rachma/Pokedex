@@ -1,14 +1,47 @@
-const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
-    datasets: [{
-      label: 'Monthly Sales',
-      data: [10, 15, 7, 12, 18],
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1,
-    }],
-  };
-  
-  module.exports = {
-    getChartData: () => chartData,
-  };
+// const displayStats = (idHtml, hp, attack, defense, speed) => {
+//   let ctx = document.getElementById(idHtml);
+//   return new Chart(ctx, {
+//       type: 'bar',
+//       data: {
+//         labels: ['Hp', 'Attack', 'Defense', 'Speed'],
+//         datasets: [{
+//           label: 'Pokemon Stats',
+//           data: [hp, attack, defense, speed],
+//           borderWidth: 1
+//         }]
+//       },
+//       options: {
+//         scales: {
+//           y: {
+//             beginAtZero: true
+//           }
+//         }
+//       }
+//     });
+
+// }
+
+function displayStats(data) {
+  const ctx = document.getElementById('myChart');
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Hp', 'Attack', 'Defense', 'Skill'],
+      datasets: [{
+        label: 'Pokemon Stats',
+        data: data,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+
+  module.exports = {displayStats};

@@ -7,7 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="/output.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
 </head>
     <body
     class="relative bg-cover bg-repeat flex flex-wrap justify-center container mx-auto"
@@ -46,19 +46,20 @@
         <div class="ml-16 flex flex-col ">
             <div class="shadow-xl drop-shadow-2xl">
                 <canvas id="myChart" class="bg-white w-100 h-72 p-8 rounded-xl text-xl"></canvas>
+                <%=   %>
             </div>
             <div class="flex flex-row mt-8 justify-between">
                 <div class="bg-white h-32 w-36 text-center p-4 rounded-xl shadow-xl drop-shadow-2xl">
                     <p class="text-sky-500 mt-3 text-lg">Type</p>
-                    <p class="text-sky-500 font-bold text-4xl"><%= result.type  %></p>
+                    <p class="text-sky-500 font-bold text-3xl"><%= result.type  %></p>
                 </div>
                 <div class="bg-white h-32 w-36 text-center p-4 rounded-xl shadow-xl drop-shadow-2xl">
                     <p class="text-sky-500 mt-3 text-lg">Weight</p>
-                    <p class="text-sky-500 font-bold text-4xl"><%= result.weight  %></p>
+                    <p class="text-sky-500 font-bold text-3xl"><%= result.weight  %></p>
                 </div>
                 <div class="bg-white h-32 w-36 text-center p-4 rounded-xl shadow-xl drop-shadow-2xl">
                     <p class="text-sky-500 mt-3 text-lg">Height</p>
-                    <p class="text-sky-500 font-bold text-4xl"><%= result.height %></p>
+                    <p class="text-sky-500 font-bold text-3xl"><%= result.height %></p>
                 </div>
             </div>
         </div>
@@ -72,8 +73,28 @@
 </div>
 
   
-  
   <script>
+    let data = JSON.parse(`<%- JSON.stringify(result) %>`);
+
+    const ctx = document.getElementById('myChart');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Hp', 'Attack', 'Defense', 'Speed'],
+      datasets: [{
+        label: 'Pokemon Stats',
+        data: [data.hp, data.attack, data.defense, data.speed],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
 
   </script>
   

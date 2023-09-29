@@ -1,9 +1,8 @@
 // const Model = require('../models/model')
 // const { renderChart } = require('../helpers/charts')
 const {Pokemon, User, UserDetail, UserHasPokemon} = require('../models')
-// const chartModel = require('../helpers/charts');
+const {displayStats} = require('../helpers/charts');
 const bcrypt = require('bcryptjs')
-const userhaspokemon = require('../models/userhaspokemon')
 const { Op, literal } = require('sequelize');
 
 
@@ -182,8 +181,10 @@ class Controller {
 
       Pokemon.findByPk(+pokemonId)
       .then((result) => {
+        const chartData = [result.hp, result.attack, result.defense, result.speed]
         // res.send(result)
-        res.render('detailPokemon', {result, userId, pokemonId})
+
+        res.render('detailPokemon', {result, userId, pokemonId, displayStats})
       })
       .catch((err) => {
         console.log(err)
